@@ -14,7 +14,7 @@
 		9A709614281BBBEB001E14B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A709613281BBBEB001E14B2 /* Assets.xcassets */; };
 		9A709617281BBBEB001E14B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A709615281BBBEB001E14B2 /* LaunchScreen.storyboard */; };
 		9A70961A281BBBEB001E14B2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A709619281BBBEB001E14B2 /* main.m */; };
-		9A709621281BBC38001E14B2 /* callTron-min.js in Resources */ = {isa = PBXBuildFile; fileRef = 9A709620281BBC38001E14B2 /* callTron-min.js */; };
+		E31F22BB28252782008AB82E /* tronTool-min.js in Resources */ = {isa = PBXBuildFile; fileRef = E31F22BA28252782008AB82E /* tronTool-min.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,7 +30,7 @@
 		9A709616281BBBEB001E14B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A709618281BBBEB001E14B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A709619281BBBEB001E14B2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		9A709620281BBC38001E14B2 /* callTron-min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "callTron-min.js"; sourceTree = "<group>"; };
+		E31F22BA28252782008AB82E /* tronTool-min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "tronTool-min.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,13 +63,13 @@
 		9A709606281BBBEA001E14B2 /* iOSUseJs */ = {
 			isa = PBXGroup;
 			children = (
+				E31F22BA28252782008AB82E /* tronTool-min.js */,
 				9A709607281BBBEA001E14B2 /* AppDelegate.h */,
 				9A709608281BBBEA001E14B2 /* AppDelegate.m */,
 				9A70960A281BBBEA001E14B2 /* SceneDelegate.h */,
 				9A70960B281BBBEA001E14B2 /* SceneDelegate.m */,
 				9A70960D281BBBEA001E14B2 /* ViewController.h */,
 				9A70960E281BBBEA001E14B2 /* ViewController.m */,
-				9A709620281BBC38001E14B2 /* callTron-min.js */,
 				9A709610281BBBEA001E14B2 /* Main.storyboard */,
 				9A709613281BBBEB001E14B2 /* Assets.xcassets */,
 				9A709615281BBBEB001E14B2 /* LaunchScreen.storyboard */,
@@ -136,9 +136,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E31F22BB28252782008AB82E /* tronTool-min.js in Resources */,
 				9A709617281BBBEB001E14B2 /* LaunchScreen.storyboard in Resources */,
 				9A709614281BBBEB001E14B2 /* Assets.xcassets in Resources */,
-				9A709621281BBC38001E14B2 /* callTron-min.js in Resources */,
 				9A709612281BBBEA001E14B2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,7 +296,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8A67PJQ889;
+				DEVELOPMENT_TEAM = LDGMH27T2T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOSUseJs/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -304,6 +304,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -323,7 +324,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8A67PJQ889;
+				DEVELOPMENT_TEAM = LDGMH27T2T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOSUseJs/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -331,6 +332,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
