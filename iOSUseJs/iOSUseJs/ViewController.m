@@ -139,7 +139,7 @@
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
     NSLog(@"===%@",message.name);
 //    NSLog(@"===%@",message.body);
-    NSLog(@"====-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-====");
+    NSLog(@"=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=");
     if ([message.name isEqualToString:@"tronTool.addressToTron"]) {
         NSLog(@"波场地址 = %@",message.body);
     } else if ([message.name isEqualToString:@"tronTool.version"]) {
