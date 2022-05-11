@@ -7,6 +7,34 @@
 
 #import "ViewController.h"
 #import <WebKit/WebKit.h>
+
+// WKWebView 内存不释放的问题解决
+@interface WeakWebViewScriptMessageDelegate : NSObject <WKScriptMessageHandler>
+
+//WKScriptMessageHandler 这个协议类专门用来处理JavaScript调用原生OC的方法
+@property (nonatomic, weak) id <WKScriptMessageHandler> scriptDelegate;
+
+- (instancetype)initWithDelegate:(id<WKScriptMessageHandler>)scriptDelegate;
+
+
+@end
+
+@implementation WeakWebViewScriptMessageDelegate
+
+- (instancetype)initWithDelegate:(id<WKScriptMessageHandler>)scriptDelegate {
+    if (self = [super init]) {
+        _scriptDelegate = scriptDelegate;
+    }
+    return self;
+}
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    if ([self.scriptDelegate respondsToSelector:@selector(userContentController:didReceiveScriptMessage:)]) {
+        [self.scriptDelegate userContentController:userContentController didReceiveScriptMessage:message];
+    }
+}
+
+@end
+
 @interface ViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 @property (nonatomic, strong) WKWebView *webView;//用来和js交互请求接口
 
@@ -18,29 +46,31 @@
 
 - (WKWebView *)webView {
     if (!_webView) {
+        WeakWebViewScriptMessageDelegate *weakScriptMessageDelegate = [[WeakWebViewScriptMessageDelegate alloc] initWithDelegate:self];
+        
         _configuration = [[WKWebViewConfiguration alloc] init];
         //WKUserContentController这个类主要用来做native与JavaScript的交互管理
         
         WKUserContentController *wkUController = [[WKUserContentController alloc] init];
         _configuration.userContentController = wkUController;
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.version"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.addressToTron"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.addressToEth"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getTokenInfo"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getERC20Name"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getERC20Symbol"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getERC20Decimals"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getERC20Balance"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getBalance"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getBalances"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.sendTrx"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.sendERC20Token"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.estimateEnergyUsed"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getGasLimitWithNetwork_sendTrx"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getGasLimit_sendERC20"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getTransaction"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.getTransactionInfo"];
-        [_configuration.userContentController addScriptMessageHandler:self name:@"tronTool.sign"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.version"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.addressToTron"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.addressToEth"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getTokenInfo"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getERC20Name"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getERC20Symbol"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getERC20Decimals"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getERC20Balance"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getBalance"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getBalances"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.sendTrx"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.sendERC20Token"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.estimateEnergyUsed"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getGasLimitWithNetwork_sendTrx"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getGasLimit_sendERC20"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getTransaction"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getTransactionInfo"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.sign"];
         
         
         // WKPreferences这个类主要设置偏好
@@ -67,11 +97,37 @@
     }
     return _webView;
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.version"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.addressToTron"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.addressToEth"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getTokenInfo"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getERC20Name"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getERC20Symbol"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getERC20Decimals"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getERC20Balance"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getBalance"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getBalances"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.sendTrx"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.sendERC20Token"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.estimateEnergyUsed"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getGasLimitWithNetwork_sendTrx"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getGasLimit_sendERC20"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getTransaction"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getTransactionInfo"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.sign"];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.webView];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.baidu.com"]]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://fanyi.baidu.com/"]]];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //        [self.webView evaluateJavaScript:@"javascript:window.tronTool.mainnet();" completionHandler:^(id _Nullable response, NSError * _Nullable error) {
 //            NSLog(@"value111: %@ error: %@", response, error);
