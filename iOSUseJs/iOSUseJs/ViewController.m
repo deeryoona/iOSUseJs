@@ -71,6 +71,7 @@
         [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getTransaction"];
         [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.getTransactionInfo"];
         [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.sign"];
+        [_configuration.userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"tronTool.signTx"];
         
         
         // WKPreferences这个类主要设置偏好
@@ -121,6 +122,7 @@
     [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getTransaction"];
     [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.getTransactionInfo"];
     [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.sign"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"tronTool.signTx"];
 }
 
 - (void)viewDidLoad {
@@ -128,7 +130,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.webView];
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://fanyi.baidu.com/"]]];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //        [self.webView evaluateJavaScript:@"javascript:window.tronTool.mainnet();" completionHandler:^(id _Nullable response, NSError * _Nullable error) {
 //            NSLog(@"value111: %@ error: %@", response, error);
 //        }];
@@ -155,7 +157,7 @@
 
 - (void)testTron{
     [self.webView evaluateJavaScript:@"javascript:window.tronTool.delegateCall(window.tronTool.version(), 'tronTool.version');" completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.addressToTron('%@'), 'tronTool.addressToTron')",@"0xc11d9943805e56b630a401d4bd9a29550353efa1"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
 
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.addressToEth('%@'), 'tronTool.addressToEth')",@"TTaJsdnYPsBjLLM1u2qMw1e9fLLoVKnNUX"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
@@ -174,22 +176,25 @@
 
     NSString *tokens = @"['T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb', 'TXCWs4vtLW2wYFHfi7xWeiC9Kuj2jxpKqJ', 'TEzJjjC4NrLrYFthGFHzQon5zrErNw1JN9', 'TYMQT8152SicTSDuNEob6t6QRLfet1xrMn']";
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.getBalances('%@', '%@', %@), 'tronTool.getBalances')",@"TCmNMtJQiPpSKiGuXUj4vcJAGKqJstmsBD", @"TTaJsdnYPsBjLLM1u2qMw1e9fLLoVKnNUX", tokens] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.sendTrx('%@', '%@', '%@'), 'tronTool.sendTrx')",@"4594348E3482B751AA235B8E580EFEF69DB465B3A291C5662CEDA6459ED12E39", @"TFzEXjcejyAdfLSEANordcppsxeGW9jEm2", @"1"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.sendERC20Token('%@', '%@', '%@', '%@', %@), 'tronTool.sendERC20Token')",@"4594348E3482B751AA235B8E580EFEF69DB465B3A291C5662CEDA6459ED12E39", @"TFzEXjcejyAdfLSEANordcppsxeGW9jEm2", @"1", @"TEzJjjC4NrLrYFthGFHzQon5zrErNw1JN9", @"15000000"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.estimateEnergyUsed('%@', '%@', '%@', '%@', %@), 'tronTool.estimateEnergyUsed')",@"TTaJsdnYPsBjLLM1u2qMw1e9fLLoVKnNUX", @"TEzJjjC4NrLrYFthGFHzQon5zrErNw1JN9", @"transfer(address,uint256)", @"0", @"['TFzEXjcejyAdfLSEANordcppsxeGW9jEm2', '1']"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.getGasLimitWithNetwork_sendTrx('%@', '%@', '%@'), 'tronTool.getGasLimitWithNetwork_sendTrx')",@"TTaJsdnYPsBjLLM1u2qMw1e9fLLoVKnNUX", @"TFzEXjcejyAdfLSEANordcppsxeGW9jEm2", @"1"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.getGasLimit_sendERC20('%@', '%@', '%@', '%@'), 'tronTool.getGasLimit_sendERC20')",@"TTaJsdnYPsBjLLM1u2qMw1e9fLLoVKnNUX", @"TFzEXjcejyAdfLSEANordcppsxeGW9jEm2", @"1", @"TEzJjjC4NrLrYFthGFHzQon5zrErNw1JN9"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
-    
+
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.getTransaction('%@'), 'tronTool.getTransaction')",@"ea84b77dcceb74c8516089c7ddde23b502225f4438d66a0a7591b5de37d65add"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
 
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.getTransactionInfo('%@'), 'tronTool.getTransactionInfo')",@"ea84b77dcceb74c8516089c7ddde23b502225f4438d66a0a7591b5de37d65add"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
 
     [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.sign('%@', '%@'), 'tronTool.sign')",@"hello world", @"4594348e3482b751aa235b8e580efef69db465b3a291c5662ceda6459ed12e39"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
+    
+    NSString *txObj = @"{\"visible\":false,\"txID\":\"055239a62bc461568884d6b0f01adc332776ac69b6faff0ed5e428e11b0bf11b\",\"raw_data\":{\"contract\":[{\"parameter\":{\"value\":{\"data\":\"38615bb000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000025544e56546454535046506f76327842414d52536e6e664577586a4544545641415346456836000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002435636135643639382d383032382d343539662d616662332d36616538653933643862323700000000000000000000000000000000000000000000000000000000\",\"owner_address\":\"41c11d9943805e56b630a401d4bd9a29550353efa1\",\"contract_address\":\"41f723e62e48f4e0a5160ebaf69a60d7244e462a05\",\"call_value\":1000000},\"type_url\":\"type.googleapis.com/protocol.TriggerSmartContract\"},\"type\":\"TriggerSmartContract\"}],\"ref_block_bytes\":\"edaa\",\"ref_block_hash\":\"18b51dc44cc41799\",\"expiration\":1653470136000,\"fee_limit\":150000000,\"timestamp\":1653470077372},\"raw_data_hex\":\"0a02edaa220818b51dc44cc4179940c08d80d48f305ab403081f12af030a31747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e54726967676572536d617274436f6e747261637412f9020a1541c11d9943805e56b630a401d4bd9a29550353efa1121541f723e62e48f4e0a5160ebaf69a60d7244e462a0518c0843d22c40238615bb000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000025544e56546454535046506f76327842414d52536e6e664577586a4544545641415346456836000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002435636135643639382d383032382d343539662d616662332d3661653865393364386232370000000000000000000000000000000000000000000000000000000070bcc3fcd38f30900180a3c347\"}";
+    [self.webView evaluateJavaScript:[NSString stringWithFormat:@"javascript:window.tronTool.delegateCall(window.tronTool.signTx(%@, '%@'), 'tronTool.signTx')",txObj, @"4594348e3482b751aa235b8e580efef69db465b3a291c5662ceda6459ed12e39"] completionHandler:^(id _Nullable response, NSError * _Nullable error) {}];
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
